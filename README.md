@@ -1,31 +1,67 @@
-# Wildfire-Detection-AI
-AI-powered wildfire detection and prevention system for GDSC Solution Challenge 2025.
-# 🚀 AI-Powered Wildfire Detection and Prediction System  
-An AI-driven platform for early wildfire detection using satellite data, IoT sensors, and machine learning.  
+# 🔥 LA Wildfire Tracker
 
-## 🌍 SDG Alignment
-- **SDG 9 (Industry, Innovation, and Infrastructure)**: Uses AI and IoT for real-time monitoring.
-- **SDG 13 (Climate Action)**: Reduces greenhouse gas emissions by preventing wildfires.
+## 🌍 Problem Statement
+Wildfires cause massive destruction, leading to loss of life, displacement, and severe environmental damage. Lack of real-time tracking and awareness makes it difficult to respond effectively. 
 
-## 🛠️ Tech Stack
-- **AI & ML:** TensorFlow, Google AutoML
-- **Cloud Services:** Google Cloud (BigQuery, Firebase)
-- **IoT Sensors:** NodeMCU, ESP32
-- **Geospatial Analysis:** Google Earth Engine, Google Maps API
+## 🚀 Solution
+LA Wildfire Tracker is a real-time wildfire monitoring system that:
+- Fetches live wildfire data from Firestore.
+- Displays the latest fire incidents with severity levels.
+- Provides data visualization with charts for easy understanding.
+- Helps communities and officials take action quickly.
 
-## 🎯 Key Features
-✅ AI-powered risk assessment  
-✅ Real-time IoT sensor data monitoring  
-✅ Interactive wildfire risk mapping  
-✅ Mobile alerts for residents & firefighters  
+## 🛠 Features
+✅ Real-time wildfire tracking from Firestore.
+✅ Automatic updates without refreshing the page.
+✅ Severity level predictions for different areas.
+✅ Interactive graphs & data visualization.
 
-## 📂 Project Structure
-📂 Wildfire-Detection-AI  
- ┣ 📁 src *(Main code files - will be added soon)*  
- ┣ 📁 models *(ML models - coming soon)*  
- ┣ 📁 sensors *(IoT scripts - to be developed)*  
- ┣ 📁 docs *(Diagrams, flowcharts, and reports - will be included)*  
- ┣ 📄 README.md *(This file - contains project details)*  
- ┣ 📄 requirements.txt *(Python dependencies - will be listed later)*  
- ┣ 📄 wildfire_detection.ipynb *(Jupyter Notebook for ML testing - work in progress)*  
+## 🏆 Google Technologies Used
+- **Firebase Firestore** → Real-time wildfire data storage.
+- **FastAPI** → Backend API to fetch and process data.
+- **Google Cloud** → Firestore hosting & data processing.
+- **Material UI & Recharts** → Modern UI and graphs.
+
+## 🔧 Installation & Setup
+### 1️⃣ Clone the repository
+```sh
+ git clone https://github.com/your-repo/la-wildfire-tracker.git
+ cd la-wildfire-tracker
+```
+### 2️⃣ Install dependencies
+#### Backend (FastAPI)
+```sh
+pip install -r requirements.txt
+```
+#### Frontend (React)
+```sh
+cd frontend
+npm install
+```
+### 3️⃣ Set up Firebase
+- Add your `serviceAccountKey.json` in the backend folder.
+- Configure `firebaseConfig.js` in the frontend with your Firebase project details.
+
+### 4️⃣ Run the backend (FastAPI)
+```sh
+uvicorn main:app --reload
+```
+
+### 5️⃣ Run the frontend (React)
+```sh
+npm start
+```
+
+## 📊 How It Works
+1️⃣ Backend fetches wildfire data from Firestore.
+2️⃣ Data is automatically updated and displayed in the frontend.
+3️⃣ Fire severity levels are analyzed and visualized.
+
+## 🔮 Future Improvements
+- **AI-powered wildfire prediction using Vertex AI.**
+- **Integration with Google Earth Engine for satellite wildfire tracking.**
+- **User authentication for emergency responders.**
+
+## 📩 Contact
+For queries, contact: shakeelabdullah919@gmail.com
 
