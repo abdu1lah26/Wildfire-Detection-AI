@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { AppBar, Toolbar, Typography, Container, CircularProgress, Alert, Paper, Grid, Card, CardContent, Button } from "@mui/material";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, LineChart, Line, ResponsiveContainer } from "recharts";
-import { db } from "./firebaseConfig";
-import { collection, onSnapshot } from "firebase/firestore";
+import axios from "axios"; 
+
 import FireIcon from "@mui/icons-material/LocalFireDepartment";
 import AreaIcon from "@mui/icons-material/Terrain";
 import ContainmentIcon from "@mui/icons-material/Security";
 import WarningIcon from "@mui/icons-material/Warning";
+
+const BACKEND_URL = "https://wildfire-tracker-backend.onrender.com"; 
 
 function App() {
   const [wildfireData, setWildfireData] = useState([]);
@@ -15,22 +17,29 @@ function App() {
   const [showDangerLevels, setShowDangerLevels] = useState(false);
 
   useEffect(() => {
-    console.log("📡 Listening for live wildfire updates...");
-    const unsubscribe = onSnapshot(collection(db, "wildfires"), (snapshot) => {
-      const fires = snapshot.docs.map((doc) => doc.data());
-      setWildfireData(fires);
-      setLoading(false);
-    });
+    console.log("📡 Fetching live wildfire data...");
+    
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${BACKEND_URL}/wildfire`);
+        setWildfireData(response.data.fires || []);
+        setLoading(false);
+      } catch (err) {
+        console.error("🔥 Error fetching wildfire data:", err);
+        setError("Failed to fetch wildfire data. Please try again later.");
+        setLoading(false);
+      }
+    };
 
-    return () => unsubscribe();
+    fetchData();
+    const interval = setInterval(fetchData, 10000); // ✅ Fetch data every 10 seconds
+    return () => clearInterval(interval);
   }, []);
 
-  // 🔥 Calculate Summary Stats
   const totalFires = wildfireData.length;
   const totalAcresBurned = wildfireData.reduce((sum, fire) => sum + (fire.acresBurned || 0), 0);
   const avgContainment = totalFires ? (wildfireData.reduce((sum, fire) => sum + (fire.containment || 0), 0) / totalFires).toFixed(2) : 0;
 
-  // 🔥 Function to determine danger level
   const getDangerLevel = (fire) => {
     if (fire.containment > 80) return { level: "🟢 Low", color: "green" };
     if (fire.containment >= 50) return { level: "🟠 Moderate", color: "orange" };
@@ -39,7 +48,6 @@ function App() {
 
   return (
     <>
-      {/* 🔥 Top Bar */}
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6">🔥 LA Wildfire Tracker</Typography>
@@ -52,7 +60,6 @@ function App() {
           <CircularProgress />
         ) : (
           <>
-            {/* 🔥 Summary Cards */}
             <Grid container spacing={3} style={{ marginBottom: "20px" }}>
               <Grid item xs={12} md={4}>
                 <Card elevation={3}>
@@ -91,7 +98,6 @@ function App() {
               </Grid>
             </Grid>
 
-            {/* 🔥 Button to Show Danger Levels */}
             <Button 
               variant="contained" 
               color="secondary" 
@@ -102,7 +108,6 @@ function App() {
               {showDangerLevels ? "Hide Danger Levels" : "Show Danger Levels"}
             </Button>
 
-            {/* 🔥 Display Danger Levels (Only if Button is Clicked) */}
             {showDangerLevels && (
               <Paper elevation={3} style={{ padding: "15px", marginBottom: "20px" }}>
                 <Typography variant="h6" style={{ marginBottom: "10px" }}>⚠️ Wildfire Danger Levels</Typography>
@@ -125,9 +130,7 @@ function App() {
               </Paper>
             )}
 
-            {/* 🔥 Data Visualizations */}
             <Grid container spacing={3}>
-              {/* 🔥 Bar Chart */}
               <Grid item xs={12} md={6}>
                 <Typography variant="h6" align="center">🔥 Acres Burned Per Fire</Typography>
                 <ResponsiveContainer width="100%" height={300}>
@@ -140,7 +143,6 @@ function App() {
                 </ResponsiveContainer>
               </Grid>
 
-              {/* 🔥 Line Chart */}
               <Grid item xs={12} md={6}>
                 <Typography variant="h6" align="center">🔥 Containment Progress</Typography>
                 <ResponsiveContainer width="100%" height={300}>
