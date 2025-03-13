@@ -9,10 +9,10 @@ import random
 
 app = FastAPI()
 
-# ✅ Enable CORS
+# ✅ Enable CORS (Allow Frontend & Backend Communication)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["https://wildfire-tracker-ca6a1.web.app", "https://wildfire-tracker-backend.onrender.com"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
