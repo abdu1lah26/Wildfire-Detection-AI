@@ -25,8 +25,8 @@ LA Wildfire Tracker is a real-time wildfire monitoring system that:
 ## 🔧 Installation & Setup
 ### 1️⃣ Clone the repository
 ```sh
- git clone https://github.com/your-repo/la-wildfire-tracker.git
- cd la-wildfire-tracker
+ git clone https://github.com/abdu1lah26/Wildfire-Detection-AI.git
+ cd Wildfire-Detection-AI
 ```
 ### 2️⃣ Install dependencies
 #### Backend (FastAPI)
