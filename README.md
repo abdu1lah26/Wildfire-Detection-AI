@@ -22,6 +22,10 @@ LA Wildfire Tracker is a real-time wildfire monitoring system that:
 - **Google Cloud** → Firestore hosting & data processing.
 - **Material UI & Recharts** → Modern UI and graphs.
 
+## 🎯 UN Sustainable Development Goals (SDGs) 
+✅ SDG 13: Climate Action → Helps mitigate wildfire disasters by providing real-time data and awareness.
+✅ SDG 15: Life on Land → Protects forests and biodiversity by tracking wildfire spread and enabling quicker response.
+
 ## 🔧 Installation & Setup
 ### 1️⃣ Clone the repository
 ```sh
