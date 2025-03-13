@@ -1,5 +1,5 @@
 import firebase_admin
-from firebase_admin import messaging, credentials, firestore
+from firebase_admin import credentials, firestore
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import os
@@ -9,10 +9,10 @@ import random
 
 app = FastAPI()
 
-# ✅ Enable CORS (Allow Frontend & Backend Communication)
+# ✅ Enable CORS (Allow Frontend to Access Backend)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://wildfire-tracker-ca6a1.web.app", "https://wildfire-tracker-backend.onrender.com"],
+    allow_origins=["https://wildfire-tracker-ca6a1.web.app"],  # ✅ Only allow frontend
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -39,28 +39,12 @@ def home():
 def get_wildfire_data():
     try:
         fires_ref = db.collection("wildfires").stream()
-        fires = [fire.to_dict() for fire in fires_ref]
+        fires = [{"id": fire.id, **fire.to_dict()} for fire in fires_ref]
         return {"fires": fires}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"🔥 Error fetching wildfire data: {str(e)}")
 
-# ✅ Function to Send Notification to a Specific Device
-@app.post("/send-notification/")
-async def send_notification(token: str, title: str, body: str):
-    if not firebase_admin._apps:
-        raise HTTPException(status_code=500, detail="Firebase not initialized. Check credentials.")
-
-    try:
-        message = messaging.Message(
-            notification=messaging.Notification(title=title, body=body),
-            token=token  # ✅ Send to a specific device instead of a topic
-        )
-        response = messaging.send(message)
-        return {"message": "✅ Notification Sent!", "response": response}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"🔥 Failed to send notification: {str(e)}")
-
-# ✅ Function to Simulate Real-Time Firestore Updates
+# ✅ Function to Simulate Real-Time Wildfire Updates
 def simulate_wildfire_updates():
     while True:
         try:
@@ -69,19 +53,33 @@ def simulate_wildfire_updates():
                 fire_data = fire.to_dict()
 
                 # ✅ Simulating fire spread & containment updates
-                new_acres_burned = fire_data["acresBurned"] + random.randint(10, 100)
-                new_containment = min(fire_data["containment"] + random.randint(0, 5), 100)
+                new_acres_burned = fire_data["acresBurned"] + random.randint(10, 150)
 
+                # ✅ Randomly adjust containment (keep some fires active)
+                if fire_data["containment"] < 90:
+                    new_containment = min(fire_data["containment"] + random.randint(1, 15), 100)
+                else:
+                    new_containment = 100
+
+                # ✅ Update status based on containment
+                new_status = (
+                    "Contained" if new_containment >= 90 else 
+                    "Controlled" if new_containment >= 50 else 
+                    "Active"
+                )
+
+                # ✅ Update Firestore
                 db.collection("wildfires").document(fire.id).update({
                     "acresBurned": new_acres_burned,
-                    "containment": new_containment
+                    "containment": new_containment,
+                    "status": new_status
                 })
 
             print("✅ Firestore wildfires updated!")
         except Exception as e:
             print(f"🔥 Error updating Firestore: {str(e)}")
         
-        time.sleep(10)  # ✅ Update Firestore every 10 seconds
+        time.sleep(10)  # ✅ Update every 10 seconds
 
 # ✅ Start Firestore Update Simulation in Background
 threading.Thread(target=simulate_wildfire_updates, daemon=True).start()

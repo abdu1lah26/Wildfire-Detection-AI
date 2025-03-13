@@ -41,7 +41,7 @@ function App() {
   const avgContainment = totalFires ? (wildfireData.reduce((sum, fire) => sum + (fire.containment || 0), 0) / totalFires).toFixed(2) : 0;
 
   const getDangerLevel = (fire) => {
-    if (fire.containment > 80) return { level: "🟢 Low", color: "green" };
+    if (fire.containment >= 90) return { level: "🟢 Low", color: "green" };
     if (fire.containment >= 50) return { level: "🟠 Moderate", color: "orange" };
     return { level: "🔴 High", color: "red" };
   };
@@ -107,54 +107,6 @@ function App() {
             >
               {showDangerLevels ? "Hide Danger Levels" : "Show Danger Levels"}
             </Button>
-
-            {showDangerLevels && (
-              <Paper elevation={3} style={{ padding: "15px", marginBottom: "20px" }}>
-                <Typography variant="h6" style={{ marginBottom: "10px" }}>⚠️ Wildfire Danger Levels</Typography>
-                {wildfireData.map((fire, index) => {
-                  const danger = getDangerLevel(fire);
-                  return (
-                    <Paper 
-                      key={fire.id || index} 
-                      elevation={2} 
-                      style={{ padding: "10px", marginBottom: "10px", borderLeft: `5px solid ${danger.color}` }}
-                    >
-                      <Typography variant="h6">{fire.name}</Typography>
-                      <Typography>Status: {fire.status} | Acres Burned: {fire.acresBurned} | Containment: {fire.containment}%</Typography>
-                      <Typography style={{ color: danger.color, fontWeight: "bold" }}>
-                        Danger Level: {danger.level}
-                      </Typography>
-                    </Paper>
-                  );
-                })}
-              </Paper>
-            )}
-
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={6}>
-                <Typography variant="h6" align="center">🔥 Acres Burned Per Fire</Typography>
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={wildfireData}>
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="acresBurned" fill="#ff5733" name="Acres Burned" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </Grid>
-
-              <Grid item xs={12} md={6}>
-                <Typography variant="h6" align="center">🔥 Containment Progress</Typography>
-                <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={wildfireData}>
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Line type="monotone" dataKey="containment" stroke="#33ff57" name="Containment (%)" />
-                  </LineChart>
-                </ResponsiveContainer>
-              </Grid>
-            </Grid>
           </>
         )}
       </Container>
