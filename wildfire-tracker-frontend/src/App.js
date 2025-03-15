@@ -21,7 +21,7 @@ function App() {
     
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${BACKEND_URL}/wildfire`);
+        const response = await axios.get("https://wildfire-tracker-backend.onrender.com/wildfire");
         setWildfireData(response.data.fires || []);
         setLoading(false);
       } catch (err) {
