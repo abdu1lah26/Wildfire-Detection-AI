@@ -12,7 +12,7 @@ app = FastAPI()
 # ✅ Enable CORS (Allow Frontend to Access Backend)
 app.add_middleware(
     CORSMiddleware,
-     allow_origins=["https://wildfire-tracker-ca6a1.web.app", "https://wildfire-tracker-backend.onrender.com"],
+     allow_origins=["https://wildfire-tracker-ca6a1.web.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
