@@ -131,6 +131,33 @@ function App() {
                 })}
               </Paper>
             )}
+
+            {/* ✅ Charts and Graphs - FIXED! */}
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={6}>
+                <Typography variant="h6" align="center">🔥 Acres Burned Per Fire</Typography>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={wildfireData}>
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="acresBurned" fill="#ff5733" name="Acres Burned" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <Typography variant="h6" align="center">🔥 Containment Progress</Typography>
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart data={wildfireData}>
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Line type="monotone" dataKey="containment" stroke="#33ff57" name="Containment (%)" />
+                  </LineChart>
+                </ResponsiveContainer>
+              </Grid>
+            </Grid>
           </>
         )}
       </Container>
