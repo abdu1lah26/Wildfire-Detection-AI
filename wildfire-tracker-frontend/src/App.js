@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { AppBar, Toolbar, Typography, Container, CircularProgress, Alert, Paper, Grid, Card, CardContent, Button } from "@mui/material";
+import { AppBar, Toolbar, Typography, Container, CircularProgress, Alert, Grid, Card, CardContent, Button } from "@mui/material";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, LineChart, Line, ResponsiveContainer } from "recharts";
 import axios from "axios"; 
 
@@ -21,7 +21,7 @@ function App() {
     
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://wildfire-tracker-backend.onrender.com/wildfire');
+        const response = await axios.get(`${BACKEND_URL}/wildfire`);
         setWildfireData(response.data.fires || []);
         setLoading(false);
       } catch (err) {
@@ -32,7 +32,7 @@ function App() {
     };
 
     fetchData();
-    const interval = setInterval(fetchData, 10000); // ✅ Fetch data every 10 seconds
+    const interval = setInterval(fetchData, 10000);
     return () => clearInterval(interval);
   }, []);
 
@@ -107,6 +107,33 @@ function App() {
             >
               {showDangerLevels ? "Hide Danger Levels" : "Show Danger Levels"}
             </Button>
+
+            {/* 🔥 Data Visualization */}
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={6}>
+                <Typography variant="h6" align="center">🔥 Acres Burned Per Fire</Typography>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={wildfireData}>
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="acresBurned" fill="#ff5733" name="Acres Burned" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <Typography variant="h6" align="center">🔥 Containment Progress</Typography>
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart data={wildfireData}>
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Line type="monotone" dataKey="containment" stroke="#33ff57" name="Containment (%)" />
+                  </LineChart>
+                </ResponsiveContainer>
+              </Grid>
+            </Grid>
           </>
         )}
       </Container>
