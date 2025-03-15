@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { AppBar, Toolbar, Typography, Container, CircularProgress, Alert, Grid, Card, CardContent, Button } from "@mui/material";
+import { AppBar, Toolbar, Typography, Container, CircularProgress, Alert, Paper, Grid, Card, CardContent, Button } from "@mui/material";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, LineChart, Line, ResponsiveContainer } from "recharts";
 import axios from "axios"; 
 
@@ -32,7 +32,7 @@ function App() {
     };
 
     fetchData();
-    const interval = setInterval(fetchData, 10000);
+    const interval = setInterval(fetchData, 10000); // ✅ Fetch data every 10 seconds
     return () => clearInterval(interval);
   }, []);
 
@@ -98,6 +98,7 @@ function App() {
               </Grid>
             </Grid>
 
+            {/* ✅ Button to Show/Hide Danger Levels */}
             <Button 
               variant="contained" 
               color="secondary" 
@@ -108,32 +109,28 @@ function App() {
               {showDangerLevels ? "Hide Danger Levels" : "Show Danger Levels"}
             </Button>
 
-            {/* 🔥 Data Visualization */}
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={6}>
-                <Typography variant="h6" align="center">🔥 Acres Burned Per Fire</Typography>
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={wildfireData}>
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="acresBurned" fill="#ff5733" name="Acres Burned" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </Grid>
-
-              <Grid item xs={12} md={6}>
-                <Typography variant="h6" align="center">🔥 Containment Progress</Typography>
-                <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={wildfireData}>
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Line type="monotone" dataKey="containment" stroke="#33ff57" name="Containment (%)" />
-                  </LineChart>
-                </ResponsiveContainer>
-              </Grid>
-            </Grid>
+            {/* ✅ Danger Level List */}
+            {showDangerLevels && (
+              <Paper elevation={3} style={{ padding: "15px", marginBottom: "20px" }}>
+                <Typography variant="h6" style={{ marginBottom: "10px" }}>⚠️ Wildfire Danger Levels</Typography>
+                {wildfireData.map((fire, index) => {
+                  const danger = getDangerLevel(fire);
+                  return (
+                    <Paper 
+                      key={fire.id || index} 
+                      elevation={2} 
+                      style={{ padding: "10px", marginBottom: "10px", borderLeft: `5px solid ${danger.color}` }}
+                    >
+                      <Typography variant="h6">{fire.name}</Typography>
+                      <Typography>Status: {fire.status} | Acres Burned: {fire.acresBurned} | Containment: {fire.containment}%</Typography>
+                      <Typography style={{ color: danger.color, fontWeight: "bold" }}>
+                        Danger Level: {danger.level}
+                      </Typography>
+                    </Paper>
+                  );
+                })}
+              </Paper>
+            )}
           </>
         )}
       </Container>
