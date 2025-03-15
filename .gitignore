@@ -9,3 +9,4 @@ env/
 # Ignore node_modules (for React frontend)
 node_modules/
 
+serviceAccountKey.json
