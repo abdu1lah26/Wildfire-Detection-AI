@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { AppBar, Toolbar, Typography, Container, CircularProgress, Alert, Paper, Grid, Card, CardContent, Button } from "@mui/material";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, LineChart, Line, ResponsiveContainer } from "recharts";
-import axios from "axios"; 
+import axios from "axios";
 
 import FireIcon from "@mui/icons-material/LocalFireDepartment";
 import AreaIcon from "@mui/icons-material/Terrain";
 import ContainmentIcon from "@mui/icons-material/Security";
 import WarningIcon from "@mui/icons-material/Warning";
 
-const BACKEND_URL = "https://wildfire-tracker-backend.onrender.com"; 
+const BACKEND_URL = "https://wildfire-detection-ai.onrender.com";
 
 function App() {
   const [wildfireData, setWildfireData] = useState([]);
@@ -18,7 +18,7 @@ function App() {
 
   useEffect(() => {
     console.log("📡 Fetching live wildfire data...");
-    
+
     const fetchData = async () => {
       try {
         const response = await axios.get(`${BACKEND_URL}/wildfire`);
@@ -99,10 +99,10 @@ function App() {
             </Grid>
 
             {/* ✅ Button to Show/Hide Danger Levels */}
-            <Button 
-              variant="contained" 
-              color="secondary" 
-              startIcon={<WarningIcon />} 
+            <Button
+              variant="contained"
+              color="secondary"
+              startIcon={<WarningIcon />}
               onClick={() => setShowDangerLevels(!showDangerLevels)}
               style={{ marginBottom: "20px" }}
             >
@@ -116,9 +116,9 @@ function App() {
                 {wildfireData.map((fire, index) => {
                   const danger = getDangerLevel(fire);
                   return (
-                    <Paper 
-                      key={fire.id || index} 
-                      elevation={2} 
+                    <Paper
+                      key={fire.id || index}
+                      elevation={2}
                       style={{ padding: "10px", marginBottom: "10px", borderLeft: `5px solid ${danger.color}` }}
                     >
                       <Typography variant="h6">{fire.name}</Typography>
